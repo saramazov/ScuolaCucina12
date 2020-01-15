@@ -14,12 +14,15 @@ public class SingletonConnection {
 	private static String stringConnection = rb.getString("jdbc.stringConnection");
 	private static String idConnection=rb.getString("jdbc.username");
 	private static String passConnection=rb.getString("jdbc.password");
+	private static String timezoneConnection=rb.getString("jdbc.serverTimezone");
 	
 	
 	private SingletonConnection() throws ConnessioneException{
 		
 		try {
-			conn = DriverManager.getConnection(stringConnection,idConnection,passConnection);
+			conn = DriverManager.getConnection(stringConnection+"?"+"user="+
+								idConnection+"&password="+passConnection+
+								"&serverTimezone="+timezoneConnection);
 		} catch (Exception e) {
 			throw new ConnessioneException(e.getMessage());
 		}
