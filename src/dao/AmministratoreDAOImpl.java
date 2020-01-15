@@ -143,6 +143,6 @@ public class AmministratoreDAOImpl implements AmministratoreDAO {
 //		u.setCognome("Doria");
 //		dao.delete("aa");
 //		dao.update(u);
-		System.out.println(dao.select("marco81"));
+//		System.out.println(dao.select("marco81"));
 	}
 }
