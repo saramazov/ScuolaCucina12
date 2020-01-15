@@ -8,8 +8,6 @@ public class Corso {
 	private int maxPartecipanti;
 	private double costo;
 	private String descrizione;
-	
-	public Corso() {}
 
 	public Corso(String titolo, int idCategoria,
 			int maxPartecipanti, double costo, String descrizione) {
@@ -19,6 +17,12 @@ public class Corso {
 		this.maxPartecipanti = maxPartecipanti;
 		this.costo = costo;
 		this.descrizione = descrizione;
+	}
+
+	public Corso(Integer codice, String titolo, Integer categoria, Integer numeroMaxPartecipanti, Double costo,
+			String descrizione) {
+		this(titolo,categoria,numeroMaxPartecipanti,costo,descrizione);
+		this.codice=codice;
 	}
 
 	public int getCodice() {

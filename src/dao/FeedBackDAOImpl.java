@@ -1,9 +1,12 @@
 package dao;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import entity.Categoria;
 import entity.Feedback;
 import exceptions.ConnessioneException;
 
@@ -21,8 +24,16 @@ public class FeedBackDAOImpl implements FeedbackDAO {
 	 */
 	@Override
 	public void insert(Feedback feedback) throws SQLException {
-		// TODO Auto-generated method stub
-
+		PreparedStatement ps=conn.prepareStatement
+				("INSERT INTO feedback (id_feedback, id_edizione, id_utente,"
+						+ "descrizione,voto) "
+						+ "VALUES (?,?,?,?,?)");
+		ps.setInt(1, feedback.getIdFeedback());
+		ps.setInt(2, feedback.getIdEdizione());
+		ps.setString(3, feedback.getIdUtente());
+		ps.setString(4, feedback.getDescrizione());
+		ps.setInt(5, feedback.getVoto());
+		ps.executeUpdate();
 	}
 
 	/*
@@ -32,7 +43,18 @@ public class FeedBackDAOImpl implements FeedbackDAO {
 	 */
 	@Override
 	public void update(Feedback feedback) throws SQLException {
-		// TODO Auto-generated method stub
+
+		PreparedStatement ps=conn.prepareStatement("UPDATE feedback"
+				+ " SET id_edizione=?, id_utente=?, "
+				+ " descrizione=?, voto=? where id_feedback=?");
+		ps.setInt(1, feedback.getIdEdizione());
+		ps.setInt(2, feedback.getIdEdizione());
+		ps.setString(3, feedback.getDescrizione());
+		ps.setInt(4, feedback.getVoto());
+		ps.setInt(5, feedback.getIdFeedback());
+		int n = ps.executeUpdate();
+		if(n==0)
+			throw new SQLException("feedback: " + feedback.getIdFeedback()+ " non presente");
 
 	}
 
@@ -42,8 +64,13 @@ public class FeedBackDAOImpl implements FeedbackDAO {
 	 */
 	@Override
 	public void delete(int idFeedback) throws SQLException {
-		// TODO Auto-generated method stub
 
+		PreparedStatement ps = conn.prepareStatement("DELETE FROM feedback"
+				+ " WHERE id_feedback=?");
+		ps.setInt(1, idFeedback);
+		int n = ps.executeUpdate();
+		if(n==0)
+			throw new SQLException("feedback " + idFeedback+ " non presente");
 	}
 	
 	/*
@@ -51,9 +78,24 @@ public class FeedBackDAOImpl implements FeedbackDAO {
 	 * se il feedback non esiste si solleva una eccezione
 	 */
 	@Override
-	public Feedback selectSingoloFeedback(int idUtente, int idEdizione) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+	public Feedback selectSingoloFeedback(String idUtente, int idEdizione) throws SQLException {
+		PreparedStatement ps=conn.prepareStatement("SELECT * FROM feedback"
+				+ " where id_utente=? and id_edizione=?");
+
+		ps.setString(1, idUtente);
+		ps.setInt(2, idEdizione);
+
+		ResultSet rs = ps.executeQuery();
+		Feedback feedback=null;
+		if(rs.next()){
+			String descrizione= rs.getString("descrizione");
+			Integer voto = rs.getInt("voto");
+			feedback = new Feedback(idEdizione, idUtente, descrizione, voto);
+			return feedback;
+		}
+		else
+			throw new SQLException("feedback: " + idUtente+", "+idEdizione+ " non presente");
+	
 	}
 
 	/*

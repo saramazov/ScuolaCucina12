@@ -1,14 +1,12 @@
 package dao;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
 import entity.Categoria;
-import entity.Utente;
 import exceptions.ConnessioneException;
 
 public class CategoriaDAOImpl implements CategoriaDAO {
@@ -108,15 +106,15 @@ public class CategoriaDAOImpl implements CategoriaDAO {
 		return categorie;
 	}
 	
-	public static void main(String[] args) throws Exception{
-		CategoriaDAO dao= new CategoriaDAOImpl();
-		//dao.insert("a base di arachidi");
-//		u.setCognome("Doria");
-//		dao.delete("aa");
-		dao.delete(57);
-//		c.setDescrizione("crema di guacamole");
-//		dao.update(c);
-		System.out.println(dao.select());
-	}
+//	public static void main(String[] args) throws Exception{
+//		CategoriaDAO dao= new CategoriaDAOImpl();
+//		//dao.insert("a base di arachidi");
+////		u.setCognome("Doria");
+////		dao.delete("aa");
+//		dao.delete(57);
+////		c.setDescrizione("crema di guacamole");
+////		dao.update(c);
+//		System.out.println(dao.select());
+//	}
 
 }
