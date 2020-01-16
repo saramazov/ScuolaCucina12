@@ -140,7 +140,7 @@ public class CatalogoDAOImpl implements CatalogoDAO {
 //	Corso corso = dao.select(87);
 //	corso.setCosto(1000);
 //	dao.delete("aa");
-	dao.delete(97);
+//	dao.delete(97);
 //	c.setDescrizione("crema di guacamole");
 //	dao.update(corso);
 //	System.out.println(dao.select());

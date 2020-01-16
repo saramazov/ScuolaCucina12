@@ -22,6 +22,11 @@ public class Feedback {
 		this.voto = voto;
 		this.idUtente=idUtente;
 	}
+	public Feedback(int idFeedback, int idEdizione, String idUtente, String descrizione, Integer voto) {
+		this(idEdizione,idUtente,descrizione,voto);
+		this.idFeedback = idFeedback;
+	}
+
 	public int getIdEdizione() {
 		return idEdizione;
 	}
