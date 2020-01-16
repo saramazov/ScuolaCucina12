@@ -19,8 +19,8 @@ public class Corso {
 		this.descrizione = descrizione;
 	}
 
-	public Corso(Integer codice, String titolo, Integer categoria, Integer numeroMaxPartecipanti, Double costo,
-			String descrizione) {
+	public Corso(Integer codice, String titolo, Integer categoria, Integer numeroMaxPartecipanti, 
+			Double costo, String descrizione) {
 		this(titolo,categoria,numeroMaxPartecipanti,costo,descrizione);
 		this.codice=codice;
 	}

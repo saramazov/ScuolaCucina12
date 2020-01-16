@@ -7,7 +7,7 @@ import entity.Utente;
 
 public interface IscrizioneUtenteDAO {
 
-	void iscriviUtente(int idEdizione, String idUtente) throws SQLException;
+	void iscriviUtente( int idEdizione, String idUtente) throws SQLException;
 	void cancellaIscrizioneUtente(int idEdizione, String idUtente) throws SQLException;
 	ArrayList<Edizione> selectIscrizioniUtente(String idUtente) throws SQLException;
 	ArrayList<Utente> selectUtentiPerEdizione(int idEdizione) throws SQLException;
