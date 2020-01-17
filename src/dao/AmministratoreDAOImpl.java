@@ -139,7 +139,7 @@ public class AmministratoreDAOImpl implements AmministratoreDAO {
 	public static void main(String[] args) throws Exception{
 		AmministratoreDAO dao= new AmministratoreDAOImpl();
 		Utente u = new Utente("aa","aa","aa","aa", new java.util.Date(),"pp","pp", true);
-//		dao.insert(u);
+		dao.insert(u);
 //		u.setCognome("Doria");
 //		dao.delete("aa");
 //		dao.update(u);

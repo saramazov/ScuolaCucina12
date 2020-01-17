@@ -6,6 +6,7 @@ import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -31,7 +32,7 @@ public class RegistrazioneUtenteServlet extends HttpServlet {
 		List<ErroreValidazione> lista = Validatore.validazioneUtente(request);
 		if(lista.size()!=0){
 			request.setAttribute("lista", lista );
-			getServletContext().getRequestDispatcher("/WEB-INF/jsp/registraUtente.jsp").forward(request, response);
+			getServletContext().getRequestDispatcher("/jsp/registraUtente.jsp").forward(request, response);
 		}
 
 		UtenteService serviceU;
@@ -43,12 +44,14 @@ public class RegistrazioneUtenteServlet extends HttpServlet {
 
 			serviceU.registrazioneUtente(u);
 			request.setAttribute("user", u);
-			getServletContext().getRequestDispatcher("/WEB-INF/jsp/registrazioneUtenteOk.jsp").forward(request, response);
+			RequestDispatcher rd = request.getRequestDispatcher("/jsp/registrazioneUtenteOk.jsp");
+			rd.forward(request, response);
+			//getServletContext().getRequestDispatcher("/jsp/registrazioneUtenteOk.jsp").forward(request, response);
 
 		} catch (DAOException | ConnessioneException e) {
 			e.printStackTrace();
 			request.setAttribute("errore", e);
-			getServletContext().getRequestDispatcher("/WEB-INF/jsp/erroreGenerico.jsp").forward(request, response);
+			getServletContext().getRequestDispatcher("/jsp/erroreGenerico.jsp").forward(request, response);
 		}
 
 	}

@@ -30,8 +30,8 @@ public class Validatore{
 		else if(password.length()<8)
 				//il controllo viene fatto solo se la password è stata inserita
 				lista.add(new ErroreValidazione("password", bundle.getString("error.minlength") + " 8"));
-		
-		//TODO: continuare con gli eventuali controlli di validità che si ritiene necessari
+		else if(password.length()>8)
+			lista.add(new ErroreValidazione("password",bundle.getString("error.maxlength")+" 8"));
 		
 		return lista;
 	}
