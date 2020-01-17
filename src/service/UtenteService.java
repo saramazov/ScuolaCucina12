@@ -1,5 +1,6 @@
 package service;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import entity.Feedback;
 import entity.Utente;
@@ -9,7 +10,7 @@ import exceptions.DAOException;
 public interface UtenteService {
 
 	void registrazioneUtente(Utente u) throws DAOException; 
-	Utente checkCredenziali(String idUtente,String psw) throws DAOException; 
+	Utente checkCredenziali(String idUtente,String psw) throws DAOException, SQLException; 
 	void cancellaRegistrazioneUtente(String idUtente) throws DAOException;
 	void modificaDatiUtente(Utente u) throws DAOException;
 	ArrayList<Utente> visualizzaUtentiRegistrati() throws DAOException;

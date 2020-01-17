@@ -1,11 +1,18 @@
 package service;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import dao.CalendarioDAO;
 import dao.CalendarioDAOImpl;
+import dao.FeedbackDAO;
+import dao.FeedbackDAOImpl;
+import dao.IscrizioneUtenteDAO;
+import dao.IscrizioneUtenteDAOImpl;
 import dto.EdizioneDTO;
 import entity.Edizione;
+import entity.Feedback;
+import entity.Utente;
 import exceptions.ConnessioneException;
 import exceptions.DAOException;
 
@@ -13,12 +20,14 @@ public class EdizioneServiceImpl implements EdizioneService{
 
 	//dichiarare qui tutti i dao di cui si ha bisogno
 	private CalendarioDAO daoC;
-	//... dichiarazione di altri DAO
+	private IscrizioneUtenteDAO daoI;
+	private FeedbackDAO daoF;
 	
 	//costruire qui tutti i dao di cui si ha bisogno
 	public  EdizioneServiceImpl() throws ConnessioneException{
 		daoC = new CalendarioDAOImpl();
-		//... costruzione di altri DAO
+		daoI = new IscrizioneUtenteDAOImpl();
+		daoF = new FeedbackDAOImpl();
 	}
 	
 	/*
@@ -56,8 +65,14 @@ public class EdizioneServiceImpl implements EdizioneService{
 	 * un utente si può iscrivere solo se ci sono ancora posti disponibili considerato che ogni corso a un numero massimo di partecipanti
 	 */
 	@Override
-	public void iscriviUtente(int idEdizione, int idUtente) throws DAOException {
-		// TODO Auto-generated method stub
+	public void iscriviUtente(int idEdizione, String idUtente) throws DAOException {
+		try {
+			daoI.iscriviUtente(idEdizione, idUtente);
+		} catch (SQLException e) {
+			throw new DAOException("utente o edizione non esistente ");
+			
+		}
+		
 		
 	}
 
@@ -76,7 +91,7 @@ public class EdizioneServiceImpl implements EdizioneService{
 	 */
 	@Override
 	public ArrayList<EdizioneDTO> visualizzaEdizioniPerMese(int mese) throws DAOException {
-		// TODO Auto-generated method stub
+	
 		return null;
 	}
 
@@ -106,9 +121,33 @@ public class EdizioneServiceImpl implements EdizioneService{
 	 */
 	@Override
 	public EdizioneDTO visualizzaEdizione(int idEdizione) throws DAOException {
-		// TODO Auto-generated method stub
-		return null;
+		Edizione edizioniCorsi= new Edizione();
+		ArrayList<Utente> utentiIscrittiPerEd= new ArrayList<Utente>();
+		ArrayList<Feedback> feedbacks= new ArrayList<Feedback>();
+		EdizioneDTO edizioniDTO = new EdizioneDTO();
+		try {
+			edizioniCorsi=daoC.selectEdizione(idEdizione);
+			utentiIscrittiPerEd=daoI.selectUtentiPerEdizione(idEdizione);
+			feedbacks=daoF.selectPerEdizione(idEdizione);
+			edizioniDTO = new EdizioneDTO(edizioniCorsi,feedbacks, utentiIscrittiPerEd);
+			
+			
+		} catch (SQLException e) {
+			throw new DAOException("");
+			
+		}
+		
+		return edizioniDTO;
 	}
-
+ public static void main(String[] args) throws ConnessioneException, DAOException {
+	 EdizioneService service=new EdizioneServiceImpl();
+	 //service.iscriviUtente(200, "veronica");
+	 EdizioneDTO dto = new EdizioneDTO();
+	  dto = service.visualizzaEdizione(98);
+	  System.out.println(dto);
+	 
+	 
+	 
+ }
 
 }

@@ -45,8 +45,17 @@ public class UtenteServiceImpl implements UtenteService {
 	 */
 	@Override
 	public Utente checkCredenziali(String idUtente, String psw) throws DAOException {
-		// TODO Auto-generated method stub
-		return null;
+		Utente utente = null;
+		try {
+			utente = daoU.select(idUtente);
+			if(!utente.getPassword().equals(psw)) {
+				throw new DAOException("Password errata");
+			}
+		} catch (SQLException e) {
+			throw new DAOException("Utente non trovato", e);
+		}
+
+		return utente;
 	}
 
 	/*
@@ -79,8 +88,13 @@ public class UtenteServiceImpl implements UtenteService {
 	 */
 	@Override
 	public ArrayList<Utente> visualizzaUtentiRegistrati() throws DAOException {
-		// TODO Auto-generated method stub
-		return null;
+		ArrayList<Utente> utentiRegistrati = new ArrayList<Utente>();
+		try {
+			utentiRegistrati = daoU.select();
+		} catch (SQLException e) {
+			throw new DAOException("");
+		}
+		return utentiRegistrati;
 	}
 
 	/*
@@ -114,6 +128,14 @@ public class UtenteServiceImpl implements UtenteService {
 	public void cancellaFeedback(int idFeedback) throws DAOException {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public static void main(String[] args) throws ConnessioneException, DAOException, SQLException {
+		UtenteService service = new UtenteServiceImpl();
+		//System.out.println(service.checkCredenziali("pAOLO", "paolo"));
+		
+		
+		System.out.println(service.visualizzaUtentiRegistrati());
 	}
 
 }

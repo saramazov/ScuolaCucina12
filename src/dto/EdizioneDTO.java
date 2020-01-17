@@ -8,7 +8,8 @@ import entity.Utente;
 public class EdizioneDTO {
 	
 	private Edizione edizione;
-	private List<Feedback> feedbacks;
+	
+ 	private List<Feedback> feedbacks;
 	private List<Utente> utentiIscritti;
 	
 	public EdizioneDTO(){}
@@ -19,6 +20,8 @@ public class EdizioneDTO {
 		this.feedbacks = feedbacks;
 		this.utentiIscritti = utenti;
 	}
+	
+	
 
 	public List<Utente> getUtentiIscritti() {
 		return utentiIscritti;

@@ -127,8 +127,23 @@ public class CorsoServiceImpl implements CorsoService {
 	 */
 	@Override
 	public Corso visualizzaCorso(int codiceCorso) throws DAOException {
-		// TODO Auto-generated method stub
-		return null;
+		Corso vediCorso = null;
+		try {
+			vediCorso =daoC.select(codiceCorso);
+		} catch (SQLException e) {
+			
+			throw new DAOException("");
+		}
+		return vediCorso;
+	}
+	
+	public static void main(String[]  args) throws ConnessioneException, DAOException {
+		CorsoService corso = new CorsoServiceImpl();
+		
+		//System.out.println(corso.visualizzaCatalogoCorsi());
+		//Corso corsi = corso.visualizzaCorso(95);
+		//System.out.println(corsi);
+		
 	}
 
 }
