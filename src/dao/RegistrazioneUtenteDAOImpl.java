@@ -8,8 +8,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import javax.naming.NamingException;
+
 import entity.Utente;
-import exceptions.ConnessioneException;
 
 public class RegistrazioneUtenteDAOImpl implements RegistrazioneUtenteDAO {
 	private static final String insertQuery = "insert into registrati(id_utente,password,nome,cognome,dataNascita,email,telefono)"
@@ -20,20 +21,27 @@ public class RegistrazioneUtenteDAOImpl implements RegistrazioneUtenteDAO {
 	private static final String updateQuery  = "UPDATE registrati SET password=?, nome=?, cognome=?, dataNascita=?, email=?, telefono=? where id_utente=?";
 	private static final String selectIdQuery = "SELECT * FROM registrati where id_utente =?";
 	private static final String selectAllQuery = "SELECT * FROM registrati";
-	private Connection conn;
+//	private Connection conn;
 	
 	
 
-	public RegistrazioneUtenteDAOImpl() throws ConnessioneException{
-		conn = SingletonConnection.getInstance();
-	}
-	
+//	public RegistrazioneUtenteDAOImpl() throws ConnessioneException{
+//		conn = SingletonConnection.getInstance();
+//	}
+//	
 	/*
 	 * registrazione di un nuovo utente alla scuola di formazione 
 	 * se l'utente già esiste si solleva una eccezione
 	 */
 	@Override
 	public void insert(Utente u) throws SQLException {
+		
+		Connection conn = null;
+		try {
+			conn = ConnectionFactory.getConnection();
+		} catch (ClassNotFoundException | NamingException e) {
+			throw new SQLException("Errore di connessione");
+		}
 		
 		PreparedStatement ps=conn.prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS);
 		
@@ -47,8 +55,11 @@ public class RegistrazioneUtenteDAOImpl implements RegistrazioneUtenteDAO {
 			int n = ps.executeUpdate();
 		
 			if(n==0) {
+				conn.close();
 				throw new SQLException("L'utente: " + u.getIdUtente()+ "è già presente");
 			}
+			
+			conn.close();
 		
 	}
 
@@ -59,6 +70,13 @@ public class RegistrazioneUtenteDAOImpl implements RegistrazioneUtenteDAO {
 	 */
 	@Override
 	public void update(Utente u) throws SQLException {
+		Connection conn = null;
+		try {
+			conn = ConnectionFactory.getConnection();
+		} catch (ClassNotFoundException | NamingException e) {
+			throw new SQLException("Errore di connessione");
+			
+		}
 		PreparedStatement ps=conn.prepareStatement(updateQuery);
 		ps.setString(1, u.getPassword());
 		ps.setString(2,u.getNome());
@@ -68,9 +86,10 @@ public class RegistrazioneUtenteDAOImpl implements RegistrazioneUtenteDAO {
 		ps.setString(6, u.getTelefono());
 		ps.setString(7, u.getIdUtente());
 		int n = ps.executeUpdate();
-		if(n==0)
+		if(n==0) {
+			conn.close();
 			throw new SQLException("utente: " + u.getIdUtente() + " non presente");
-
+		}
 	}
 	/*
 	 * cancellazione di un singolo utente
@@ -81,6 +100,14 @@ public class RegistrazioneUtenteDAOImpl implements RegistrazioneUtenteDAO {
 	
 	
 	public void delete(String idUtente) throws SQLException {
+		
+		Connection conn = null;
+		try {
+			conn = ConnectionFactory.getConnection();
+		} catch (ClassNotFoundException | NamingException e) {
+			throw new SQLException("Errore di connessione");
+			
+		}
 		PreparedStatement ps1= conn.prepareStatement("select f.id_utente from feedback f inner join\r\n" + 
 				"iscritti i on (f.id_utente= i.id_utente) where f.id_utente ='" + idUtente +"'" +";");
 		//PreparedStatement ps2= conn.prepareStatement("select id_utente from iscritti where id_utente=' "+idUtente+"'");
@@ -92,8 +119,10 @@ public class RegistrazioneUtenteDAOImpl implements RegistrazioneUtenteDAO {
 		
 		}
 		else {
+			conn.close();
 			throw new SQLException("Non è possibile eliminare: "+idUtente +" legato ad altri dati");
 		}
+		conn.close();
 		
 	}
 	
@@ -104,12 +133,16 @@ public class RegistrazioneUtenteDAOImpl implements RegistrazioneUtenteDAO {
 	@Override
 	public ArrayList<Utente> select() throws SQLException {
 		ArrayList<Utente> utenti = new ArrayList<Utente>(); 
-
+		Connection conn = null;
+		try {
+			conn = ConnectionFactory.getConnection();
+		} catch (ClassNotFoundException | NamingException e) {
+			throw new SQLException("Errore di connessione");
+			
+		}
 		PreparedStatement ps=conn.prepareStatement(selectAllQuery);
 
 		ResultSet rs = ps.executeQuery();
-		
-		;
 		
 		while(rs.next()== true){
 			String idUtente = rs.getString("id_utente");
@@ -124,6 +157,7 @@ public class RegistrazioneUtenteDAOImpl implements RegistrazioneUtenteDAO {
 			utenti.add(ut);
 		} 
 		
+		conn.close();
 		return utenti;
 	}
 
@@ -134,6 +168,13 @@ public class RegistrazioneUtenteDAOImpl implements RegistrazioneUtenteDAO {
 	 */
 	@Override
 	public Utente select(String idUtente) throws SQLException {
+		Connection conn = null;
+		try {
+			conn = ConnectionFactory.getConnection();
+		} catch (ClassNotFoundException | NamingException e) {
+			throw new SQLException("Errore di connessione");
+			
+		}
 		PreparedStatement ps=conn.prepareStatement(selectIdQuery);
 
 		ps.setString(1, idUtente);
@@ -141,7 +182,6 @@ public class RegistrazioneUtenteDAOImpl implements RegistrazioneUtenteDAO {
 		ResultSet rs = ps.executeQuery();
 		Utente u =null;
 		if(rs.next()){
-			String idUtente1 = rs.getString("id_utente");
 			String password= rs.getString("password");
 			String nome= rs.getString("nome");
 			String cognome= rs.getString("cognome");
@@ -150,24 +190,27 @@ public class RegistrazioneUtenteDAOImpl implements RegistrazioneUtenteDAO {
 			String telefono= rs.getString("telefono");
 
 			u = new Utente(idUtente,password,nome,cognome,dataNascita,email,telefono, false);
+			conn.close();
 			return u;
 		}
-		else
+		else {
+			conn.close();
 			throw new SQLException("utente: " + idUtente + " non presente");
+		}
 	}
-	public static void main(String[] args) throws Exception{
-		RegistrazioneUtenteDAO dao= new RegistrazioneUtenteDAOImpl();
-		Utente u = new Utente("chiaraS", "ciao", "chiara", "savoldi", new java.util.Date(), "savo.chiara@", "32443", false);
-		Utente u1 = new Utente("Alberto", "ciao", "chiara", "savoldi", new java.util.Date(), "savo.chiara@", "32443", false);
-		Utente u2 = new Utente("Greta", "ciao", "chiara", "savoldi", new java.util.Date(), "savo.chiara@", "32443", false);
-		 ArrayList<Utente> b = dao.select();
-		 System.out.println(b);
-		 
+//	public static void main(String[] args) throws Exception{
+//		RegistrazioneUtenteDAO dao= new RegistrazioneUtenteDAOImpl();
+//		Utente u = new Utente("chiaraS", "ciao", "chiara", "savoldi", new java.util.Date(), "savo.chiara@", "32443", false);
+//		Utente u1 = new Utente("Alberto", "ciao", "chiara", "savoldi", new java.util.Date(), "savo.chiara@", "32443", false);
+//		Utente u2 = new Utente("Greta", "ciao", "chiara", "savoldi", new java.util.Date(), "savo.chiara@", "32443", false);
+//		 ArrayList<Utente> b = dao.select();
+//		 System.out.println(b);
+//		 
 		//dao.delete("chiaraS");
 		//u1.setCognome("brusa");
 		//dao.update(u1);
 		
 		//System.out.println(dao.select("Alberto"));
-
-}
+//
+//}
 }

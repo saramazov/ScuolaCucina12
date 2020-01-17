@@ -5,7 +5,7 @@
 
 <html>
  <body>
-  <form action="regUtente">
+  <form action="../regUtente">
 	<table>
 	  
 		<tr height="50" align="center">
